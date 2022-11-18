@@ -1677,6 +1677,7 @@ allspe$Species <- rep("Rspe", dim(allspe)[1]) #change for each species
 
 summary(allspe)
 
+
 ## R. lagascae
 #current
 lag <- as.data.frame(rlag1.cur.m, na.rm = T, xy=T)
@@ -1768,7 +1769,13 @@ summary(all.alt)
 
 write.csv(all.alt, file = "All_Rafflesia_spp_suitable_masked_envdata.csv", row.names = F)
 
-#boxplots
+### PLOTS ####
+#pal <- colorRampPalette(c("grey", "darkgreen", "red"))
+#cuts <- c(0,1,2,3)
+
+# Boxplots of Envi data across RCP scenarios
+# but this is not correct as of 11/18/2022 for bioclim data, because the future suitable areas were extracted using current climate data
+
 #altitude
 altboxgg <- ggplot() + 
   geom_boxplot(aes(y = altitude, x = Species, fill=Scenario), 
@@ -1868,92 +1875,8 @@ siltgg <- ggplot() +
   ylab("Soil Silt Content (%)")
 ggsave(siltgg, file="Plots/Boxplot-silt-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
 
-#LINEAR MODELS ####
-# I need to group the treatments that are not different each other together.
-generate_label_df <- function(TUKEY, variable){
-  
-  # Extract labels and factor levels from Tukey post-hoc 
-  Tukey.levels <- TUKEY[[variable]][,4]
-  Tukey.labels <- data.frame(multcompLetters(Tukey.levels)['Letters'])
-  
-  #I need to put the labels in the same order as in the boxplot :
-  Tukey.labels$treatment=rownames(Tukey.labels)
-  Tukey.labels=Tukey.labels[order(Tukey.labels$treatment) , ]
-  return(Tukey.labels)
-}
-
-#Speciosa
-
-#check and transform distribution of altitude data
-hist(allspe$altitude)
-hist(sqrt(allspe$altitude))
-allspe$alt.sqrt <- sqrt(allspe$altitude)
-allspe <- na.omit(allspe)
-
-a1 <- lm(alt.sqrt ~ Scenario, data = allspe)
-summ(a1)
-a2 <- aov(a1)
-
-a3 <- TukeyHSD(a2, 'Scenario', conf.level = 0.95)
-a3
-plot(a3, las=1 , col="brown")
 
 
-# Generate groups from Tukey test
-a3lab <- generate_label_df(a3 , 'Scenario')
-a3lab
-
-
-#Lagascae
-
-#check and transform distribution of altitude data
-hist(alllag$altitude)
-hist(sqrt(alllag$altitude))
-alllag$alt.sqrt <- sqrt(alllag$altitude)
-alllag <- na.omit(alllag)
-
-a4 <- lm(alt.sqrt ~ Scenario, data = alllag)
-summ(a4)
-a5 <- aov(a4)
-
-a6 <- TukeyHSD(a5, 'Scenario', conf.level = 0.95)
-a6
-plot(a6, las=1 , col="brown")
-
-
-# Generate groups from Tukey test
-a6lab <- generate_label_df(a6 , 'Scenario')
-a6lab
-
-#Lobata
-
-#check and transform distribution of altitude data
-
-alllob2 <- alllob %>% slice_sample(n=10000)
-
-hist(alllob2$altitude)
-hist(sqrt(alllob2$altitude))
-alllob2$alt.sqrt <- sqrt(alllob2$altitude)
-alllob2 <- na.omit(alllob2)
-
-a7 <- lm(alt.sqrt ~ Scenario, data = alllob2)
-summ(a7)
-a8 <- aov(a7)
-
-a9 <- TukeyHSD(a8, 'Scenario', conf.level = 0.95)
-a9
-plot(a9, las=1 , col="brown")
-
-
-# Generate groups from Tukey test
-a9lab <- generate_label_df(a9 , 'Scenario')
-a9lab
-
-
-
-#### PLOTS ####
-#pal <- colorRampPalette(c("grey", "darkgreen", "red"))
-#cuts <- c(0,1,2,3)
 
 #R. speciosa
 
