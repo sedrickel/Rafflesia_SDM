@@ -27,8 +27,6 @@ getDoParWorkers()
 
 setwd("D:/PROJECTS/Rafflesia_SDM")
 
-# hello again
-
 ### TRUE SKILL STATISTIC TEST FUNCTION #####
 #to be able to run this script you need to have told the Maxent model to produce background predictions. If you are running MaxEnt in R this means putting the argument (after "args") "writebackgroundpredictions=true" as true not false. 
 
