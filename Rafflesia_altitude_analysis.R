@@ -8,6 +8,9 @@ library(jtools)
 library(readxl)
 library(rsq)
 library(performance)
+library(xlsx)
+
+setwd("D:/PROJECTS/Rafflesia_SDM/Altitude_analysis")
 
 # Function to group the treatments that are not sig. different together.
 generate_label_df <- function(TUKEY, variable){
@@ -66,11 +69,6 @@ visreg(a1)
 a3lab <- generate_label_df(a3, 'Scenario')
 a3lab
 
-#partial R-squared
-
-r2.all <- rsq.partial(objF = a1, objR = NULL, adj = F, type = "v")
-r2.all
-
 
 #Lagascae
 
@@ -93,9 +91,17 @@ plot(a6, las=1 , col="brown")
 a6lab <- generate_label_df(a6 , 'Scenario')
 a6lab
 
+visreg(a4)
+
 #Lobata
 
 #check and transform distribution of altitude data
+
+
+hist(alllob$altitude)
+hist(sqrt(alllob$altitude))
+alllob$alt.sqrt <- sqrt(alllob$altitude)
+alllob <- na.omit(alllob)
 
 alllob2 <- alllob
 alllob2 <- alllob %>% slice_sample(n=10000)
@@ -105,7 +111,8 @@ hist(sqrt(alllob2$altitude))
 alllob2$alt.sqrt <- sqrt(alllob2$altitude)
 alllob2 <- na.omit(alllob2)
 
-a7 <- lm(alt.sqrt ~ Scenario, data = alllob2)
+
+a7 <- lm(alt.sqrt ~ Scenario, data = alllob)
 summ(a7)
 a8 <- aov(a7)
 
@@ -123,7 +130,7 @@ visreg(a7)
 
 
 
-### Multiple regression models ###
+#### Multiple regression models ####
 # This is needed to verify the significance of the scenario changes, especially for R. lobata
 # Need to sample randomly from the data set and test the significance each time
 
@@ -132,23 +139,22 @@ visreg(a7)
 options(width = 80)
 n <- 1000
 
+df <- allspe #alllob, allspe
+
 for (i in 1:n) {
   
-  #sample 10,000 points from the df
-  sam1 <- slice_sample(.data = filter(ras8616.ext.1,  Class == 1), n=5000, replace=T)
-  sam0 <- slice_sample(.data = filter(ras8616.ext.1,  Class == 0), n=5000, replace=T)
+  #sample 5,000 points from the df of each species
+  sam1 <- slice_sample(.data = df, n=5000, replace=T)
   
-  sam1 <- rbind(sam1, sam0)
-  
-  #GLM
-  glm1 <- glm(Class ~ MATemp + Aridity.sqrt + Slope.sqrt + FirePres.all, sam1, family='binomial')
-  s <- summ(glm1)
+  #linear model
+  lm1 <- lm(alt.sqrt ~ Scenario, data = sam1)
+  s <- summ(lm1)
   
   #partial R-squared
-  a1 <- rsq.partial(objF = glm1, objR = NULL, adj = F, type = "v")
+  a1 <- rsq.partial(objF = lm1, objR = NULL, adj = F, type = "v")
   
   #extract and combine coefficients
-  c <- coefficients(glm1) 
+  c <- coefficients(lm1) 
   
   if (i==1){
     coef <- c
@@ -166,7 +172,7 @@ for (i in 1:n) {
   }
   
   #extract and combine p-values
-  pv <- s$coeftable[16:20]
+  pv <- s$coeftable[10:12]
   
   if (i==1){
     pv.df <- pv
@@ -194,42 +200,49 @@ for (i in 1:n) {
 colnames(R2.df) <- c(a1$variable)
 
 #rename column name of P-values data frame
-colnames(pv.df) <- c("Intercept", a1$variable)
+colnames(pv.df) <- c("Intercept", "RCP45", "RCP85")
 
 #write it out
-write.xlsx(coef, file = "GLM_Prk_Wdl_bin_10k.xlsx", sheetName = "Coefficients", col.names = T, row.names = F, append = T)
-write.xlsx(R2.df, file = "GLM_Prk_Wdl_bin_10k.xlsx", sheetName = "Partial R2", col.names = T, row.names = F, append = T)
-write.xlsx(pv.df, file = "GLM_Prk_Wdl_bin_10k.xlsx", sheetName = "P-values", col.names = T, row.names = F, append = T)
+write.xlsx(coef, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Coefficients", col.names = T, row.names = F, append = T)
+write.xlsx(R2.df, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Partial R2", col.names = T, row.names = F, append = T)
+write.xlsx(pv.df, file = "Rspeciosa_bin_5k.xlsx", sheetName = "P-values", col.names = T, row.names = F, append = T)
 
 
 #getting quantiles
 #coefficients
 qc.int <- quantile(coef$`(Intercept)`, c(0.025, 0.975))
-qc.temp <- quantile(coef$MATemp, c(0.025, 0.975))
-qc.arid <- quantile(coef$Aridity.sqrt, c(0.025, 0.975))
-qc.slope <- quantile(coef$Slope.sqrt, c(0.025, 0.975))
-qc.fire <- quantile(coef$FirePres.all, c(0.025, 0.975))
+qc.rcp45 <- quantile(coef$ScenarioRCP4.5, c(0.025, 0.975))
+qc.rcp85 <- quantile(coef$ScenarioRCP8.5, c(0.025, 0.975))
 
-
-qc.df <- as.data.frame(rbind(qc.int, qc.temp, qc.arid, qc.slope, qc.fire))
-qc.df$Var <- c("Intercept", a1$variable)
+qc.df <- as.data.frame(rbind(qc.int, qc.rcp45, qc.rcp85))
+qc.df$Var <- c("Intercept", "RCP45", "RCP85")
 
 #partial R-squared
-qr.temp <- quantile(R2.df $MATemp, c(0.025, 0.5, 0.975))
-qr.arid <- quantile(R2.df$Aridity.sqrt, c(0.025, 0.5, 0.975))
-qr.slope <- quantile(R2.df$Slope.sqrt, c(0.025, 0.5, 0.975))
-qr.fire <- quantile(R2.df$FirePres.all, c(0.025, 0.5, 0.975))
+qr.sce <- quantile(R2.df$Scenario, c(0.025, 0.5, 0.975))
 
-
-qr.df <- as.data.frame(rbind(qr.temp, qr.arid, qr.slope, qr.fire))
-qr.df$Var <- c(a1$variable)
 
 #write it out
-write.xlsx(qc.df, file = "GLM_Prk_Wdl_bin_10k.xlsx", sheetName = "Quant-Coeffs", col.names = T, row.names = F, append = T)
-write.xlsx(qr.df, file = "GLM_Prk_Wdl_bin_10k.xlsx", sheetName = "Quant-R2", col.names = T, row.names = F, append = T)
+write.xlsx(qc.df, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Quant-Coeffs", col.names = T, row.names = F, append = T)
+write.xlsx(qr.sce, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Quant-R2", col.names = T, row.names = F, append = T)
 
-table(ras8616.ext.1$Class)
-summ(glm.all)
-r2.all
 
+#### BOXPLOTS ####
+
+#boxplot
+altboxgg <- ggplot() + 
+  geom_boxplot(aes(y = altitude, x = Species, fill=Scenario), 
+               data=alldata , outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_ipsum() +
+  ylab("Altitude (masl)")
+ggsave(altboxgg, file="Boxplot-alt-spp.png", width=19.89, height=15, units="cm", dpi=300)
+
+#violin plot 
+altgg <- ggplot(aes(y = altitude, x = Species, fill=Scenario), data=alldata) +
+  geom_violin(position="dodge", alpha=0.5, outlier.colour="transparent") +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_ipsum() +
+  ylab("Altitude (masl)")
+
+ggsave(altgg, file="Vioplot-alt-spp.png", width=19.89, height=15, units="cm", dpi=300)
 
