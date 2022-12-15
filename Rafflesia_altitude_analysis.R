@@ -139,7 +139,7 @@ visreg(a7)
 options(width = 80)
 n <- 1000
 
-df <- allspe #alllob, allspe
+df <- alllob #alllob, allspe
 
 for (i in 1:n) {
   
@@ -150,8 +150,11 @@ for (i in 1:n) {
   lm1 <- lm(alt.sqrt ~ Scenario, data = sam1)
   s <- summ(lm1)
   
-  #partial R-squared
-  a1 <- rsq.partial(objF = lm1, objR = NULL, adj = F, type = "v")
+  #Tukey
+  lm2 <- aov(lm1)
+  lm3 <- TukeyHSD(lm2, 'Scenario', conf.level = 0.95)
+  lm3
+  
   
   #extract and combine coefficients
   c <- coefficients(lm1) 
@@ -162,17 +165,9 @@ for (i in 1:n) {
     coef <- as.data.frame(rbind(coef, c))  
   }
   
-  #extract and combine partial R2
-  r2 <- a1$partial.rsq
-  
-  if (i==1){
-    R2.df <- r2
-  } else {
-    R2.df <- as.data.frame(rbind(R2.df, r2))  
-  }
-  
+
   #extract and combine p-values
-  pv <- s$coeftable[10:12]
+  pv <- lm3$Scenario[10:12]
   
   if (i==1){
     pv.df <- pv
@@ -196,16 +191,19 @@ for (i in 1:n) {
 }
 # end loop #
 
+lm3lab <- generate_label_df(lm3 , 'Scenario')
+lm3lab
+
 #rename column name of R2 data frame
-colnames(R2.df) <- c(a1$variable)
+#colnames(R2.df) <- c(a1$variable)
 
 #rename column name of P-values data frame
-colnames(pv.df) <- c("Intercept", "RCP45", "RCP85")
+colnames(pv.df) <- c("RCP4.5-Current", "RCP8.5-Current", "RCP8.5-RCP4.5")
 
 #write it out
-write.xlsx(coef, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Coefficients", col.names = T, row.names = F, append = T)
-write.xlsx(R2.df, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Partial R2", col.names = T, row.names = F, append = T)
-write.xlsx(pv.df, file = "Rspeciosa_bin_5k.xlsx", sheetName = "P-values", col.names = T, row.names = F, append = T)
+write.xlsx(coef, file = "Rspeciosa_bin_5k_tukey.xlsx", sheetName = "Coefficients", col.names = T, row.names = F, append = T)
+#write.xlsx(R2.df, file = "Rlagascae_bin_5k_tukey.xlsx", sheetName = "Partial R2", col.names = T, row.names = F, append = T)
+write.xlsx(pv.df, file = "Rspeciosa_bin_5k_tukey.xlsx", sheetName = "P-values", col.names = T, row.names = F, append = T)
 
 
 #getting quantiles
@@ -217,13 +215,22 @@ qc.rcp85 <- quantile(coef$ScenarioRCP8.5, c(0.025, 0.975))
 qc.df <- as.data.frame(rbind(qc.int, qc.rcp45, qc.rcp85))
 qc.df$Var <- c("Intercept", "RCP45", "RCP85")
 
+#P-values
+qp.int <- quantile(pv.df$Intercept, c(0.025, 0.5, 0.975))
+qp.r45 <- quantile(pv.df$RCP45, c(0.025, 0.5, 0.975))
+qp.r85 <- quantile(pv.df$RCP85, c(0.025, 0.5, 0.975))
+
+qp.df <- as.data.frame(rbind(qp.int, qp.r45, qp.r85))
+qp.df$Var <- c("RCP4.5-Current", "RCP8.5-Current", "RCP8.5-RCP4.5")
+
+
 #partial R-squared
-qr.sce <- quantile(R2.df$Scenario, c(0.025, 0.5, 0.975))
+#qr.sce <- quantile(R2.df$Scenario, c(0.025, 0.5, 0.975))
 
 
 #write it out
-write.xlsx(qc.df, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Quant-Coeffs", col.names = T, row.names = F, append = T)
-write.xlsx(qr.sce, file = "Rspeciosa_bin_5k.xlsx", sheetName = "Quant-R2", col.names = T, row.names = F, append = T)
+write.xlsx(qc.df, file = "Rspeciosa_bin_5k_tukey.xlsx", sheetName = "Quant-Coeffs", col.names = T, row.names = F, append = T)
+write.xlsx(qp.df, file = "Rspeciosa_bin_5k_tukey.xlsx", sheetName = "Quant-PVals", col.names = T, row.names = F, append = T)
 
 
 #### BOXPLOTS ####
