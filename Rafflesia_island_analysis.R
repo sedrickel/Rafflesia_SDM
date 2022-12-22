@@ -121,7 +121,7 @@ rspe.r85.a2 <- crop(rspe.r85.a2, panneg)
 rspe.r85.a2 <- mask(rspe.r85.a2, panneg)
 
 #plot to check
-
+windows()
 #R lagascae
 par(mfrow=c(2,3))
 plot(rlag.cur.a1)
@@ -186,4 +186,40 @@ writeRaster(rlob.r85.a2, filename="future/RCP8.5/R_lobata_A2_RCP85_2070_masked_i
 writeRaster(rspe.r85.a2, filename="future/RCP8.5/R_speciosa_A2_RCP85_2070_masked_island.tif", datatype="INT1U")
 
 
-#### Compute suitable areas percentage for the current era per species ####
+####COUNT NO OF PIXELS CHANGE ####
+setwd("D:/PROJECTS/Rafflesia_SDM/Island_analysis")
+
+sp.name <- "rspe" #rlob, rspe
+
+current.df <- raster::as.data.frame(get(paste0(sp.name,".cur.a1")), na.rm = T)
+colnames(current.df) <- "x"
+current.sum <- count(current.df, x)
+
+rcp45.a1.df <- as.data.frame(get(paste0(sp.name,".r45.a1")), na.rm = T)
+colnames(rcp45.a1.df) <- "x"
+rcp45.a1.sum <- count(rcp45.a1.df, x)
+
+rcp85.a1.df <- as.data.frame(get(paste0(sp.name,".r85.a1")), na.rm = T)
+colnames(rcp85.a1.df) <- "x"
+rcp85.a1.sum <- count(rcp85.a1.df, x)
+
+rcp45.a2.df <- as.data.frame(get(paste0(sp.name,".r45.a2")), na.rm = T)
+colnames(rcp45.a2.df) <- "x"
+rcp45.a2.sum <- count(rcp45.a2.df, x)
+
+rcp85.a2.df <- as.data.frame(get(paste0(sp.name,".r85.a2")), na.rm = T)
+colnames(rcp85.a2.df) <- "x"
+rcp85.a2.sum <- count(rcp85.a2.df, x)
+
+change.summ <- as.data.frame(cbind(current.sum$x, current.sum$n, rcp45.a1.sum$n, rcp85.a1.sum$n, rcp45.a2.sum$n, rcp85.a2.sum$n))
+colnames(change.summ) <- c("State", "Current", "RCP4.5-2070-A1", "RCP8.5-2070-A1", "RCP4.5-2070-A2", "RCP8.5-2070-A2")
+
+change.summ[3,1] <- "%Suitable Area"
+change.summ[3,2] <- change.summ[2,2]/(change.summ[1,2] + change.summ[2,2])*100
+change.summ[3,3] <- change.summ[2,3]/(change.summ[1,3] + change.summ[2,3])*100
+change.summ[3,4] <- change.summ[2,4]/(change.summ[1,4] + change.summ[2,4])*100
+change.summ[3,5] <- change.summ[2,5]/(change.summ[1,5] + change.summ[2,5])*100
+change.summ[3,6] <- change.summ[2,6]/(change.summ[1,6] + change.summ[2,6])*100
+change.summ
+
+write.csv(change.summ, file= paste0(sp.name,"_pixel_changes.csv"), row.names = F)
