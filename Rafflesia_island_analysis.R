@@ -189,7 +189,7 @@ writeRaster(rspe.r85.a2, filename="future/RCP8.5/R_speciosa_A2_RCP85_2070_masked
 ####COUNT NO OF PIXELS CHANGE ####
 setwd("D:/PROJECTS/Rafflesia_SDM/Island_analysis")
 
-sp.name <- "rspe" #rlob, rspe
+sp.name <- "rlob" #rlob, rspe
 
 current.a1.df <- raster::as.data.frame(get(paste0(sp.name,".cur.a1")), na.rm = T)
 colnames(current.a1.df) <- "x"

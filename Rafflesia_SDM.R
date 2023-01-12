@@ -975,18 +975,157 @@ writeRaster(rlag.a2.85, filename = "R_lagascae_01/R_lagascae_A2_RCP85_w_hosts.ti
 writeRaster(rlag.a21.85, filename = "R_lagascae_01/R_lagascae_A2_RCP85_w_mergedhosts.tif", datatype='INT2S')
 writeRaster(rlag.a22.85, filename = "R_lagascae_01/R_lagascae_A2_RCP85.tif", datatype='INT2S')
 
+### TETRASTIGMA MASKING ####
+
+#loheri
+tetloh.b.m <- (tetloh.b*10) - unsuit
+tetloh.b.m[tetloh.b.m < 10] <- 0
+tetloh.b.m[tetloh.b.m == 10] <- 1
+
+tetloh.b45.m <- (tetloh.b45*10) - unsuit
+tetloh.b45.m[tetloh.b45.m < 10] <- 0
+tetloh.b45.m[tetloh.b45.m == 10] <- 1
+
+tetloh.b85.m <- (tetloh.b85*10) - unsuit
+tetloh.b85.m[tetloh.b85.m < 10] <- 0
+tetloh.b85.m[tetloh.b85.m == 10] <- 1
+
+par(mfrow=c(1,3))
+plot(tetloh.b.m)
+plot(tetloh.b45.m)
+plot(tetloh.b85.m)
+
+writeRaster(tetloh.b.m, filename = "T_loheri_01/T_loheri_01_currentEnv_bin_ave_masked.tif", datatype='INT2S')
+writeRaster(tetloh.b45.m, filename = "T_loheri_01/T_loheri_01_2070_RCP45_ensem_bin_masked.tif", datatype='INT2S')
+writeRaster(tetloh.b85.m, filename = "T_loheri_01/T_loheri_01_2070_RCP85_ensem_bin_masked.tif", datatype='INT2S')
+
+#sp A
+tetspa.b.m <- (tetspa.b*10) - unsuit
+tetspa.b.m[tetspa.b.m < 10] <- 0
+tetspa.b.m[tetspa.b.m == 10] <- 1
+
+tetspa.b45.m <- (tetspa.b45*10) - unsuit
+tetspa.b45.m[tetspa.b45.m < 10] <- 0
+tetspa.b45.m[tetspa.b45.m == 10] <- 1
+
+tetspa.b85.m <- (tetspa.b85*10) - unsuit
+tetspa.b85.m[tetspa.b85.m < 10] <- 0
+tetspa.b85.m[tetspa.b85.m == 10] <- 1
+
+par(mfrow=c(1,3))
+plot(tetspa.b.m)
+plot(tetspa.b45.m)
+plot(tetspa.b85.m)
+
+writeRaster(tetspa.b.m, filename = "T_spa_01ss/T_spa_01ss_currentEnv_bin_ave_masked.tif", datatype='INT2S')
+writeRaster(tetspa.b45.m, filename = "T_spa_01ss/T_spa_01ss_2070_RCP45_ensem_bin_masked.tif", datatype='INT2S')
+writeRaster(tetspa.b85.m, filename = "T_spa_01ss/T_spa_01ss_2070_RCP85_ensem_bin_masked.tif", datatype='INT2S')
+
+#ellipticum
+tetell.b.m <- (tetell.b*10) - unsuit
+tetell.b.m[tetell.b.m < 10] <- 0
+tetell.b.m[tetell.b.m == 10] <- 1
+
+tetell.b45.m <- (tetell.b45*10) - unsuit
+tetell.b45.m[tetell.b45.m < 10] <- 0
+tetell.b45.m[tetell.b45.m == 10] <- 1
+
+tetell.b85.m <- (tetell.b85*10) - unsuit
+tetell.b85.m[tetell.b85.m < 10] <- 0
+tetell.b85.m[tetell.b85.m == 10] <- 1
+
+par(mfrow=c(1,3))
+plot(tetell.b.m)
+plot(tetell.b45.m)
+plot(tetell.b85.m)
+
+writeRaster(tetell.b.m, filename = "T_ellipticum_01/T_ellipticum_01_currentEnv_bin_ave_masked.tif", datatype='INT2S')
+writeRaster(tetell.b45.m, filename = "T_ellipticum_01/T_ellipticum_01_2070_RCP45_ensem_bin_masked.tif", datatype='INT2S')
+writeRaster(tetell.b85.m, filename = "T_ellipticum_01/T_ellipticum_01_2070_RCP85_ensem_bin_masked.tif", datatype='INT2S')
+
+#magnum
+tetmag.b.m <- (tetmag.b*10) - unsuit
+tetmag.b.m[tetmag.b.m < 10] <- 0
+tetmag.b.m[tetmag.b.m == 10] <- 1
+
+tetmag.b45.m <- (tetmag.b45*10) - unsuit
+tetmag.b45.m[tetmag.b45.m < 10] <- 0
+tetmag.b45.m[tetmag.b45.m == 10] <- 1
+
+tetmag.b85.m <- (tetmag.b85*10) - unsuit
+tetmag.b85.m[tetmag.b85.m < 10] <- 0
+tetmag.b85.m[tetmag.b85.m == 10] <- 1
+
+par(mfrow=c(1,3))
+plot(tetmag.b.m)
+plot(tetmag.b45.m)
+plot(tetmag.b85.m)
+
+writeRaster(tetmag.b.m, filename = "T_magnum_01/T_magnum_01_currentEnv_bin_ave_masked.tif", datatype='INT2S')
+writeRaster(tetmag.b45.m, filename = "T_magnum_01/T_magnum_01_2070_RCP45_ensem_bin_masked.tif", datatype='INT2S')
+writeRaster(tetmag.b85.m, filename = "T_magnum_01/T_magnum_01_2070_RCP85_ensem_bin_masked.tif", datatype='INT2S')
+
+# harmandii
+tethar.b.m <- (tethar.b*10) - unsuit
+tethar.b.m[tethar.b.m < 10] <- 0
+tethar.b.m[tethar.b.m == 10] <- 1
+
+tethar.b45.m <- (tethar.b45*10) - unsuit
+tethar.b45.m[tethar.b45.m < 10] <- 0
+tethar.b45.m[tethar.b45.m == 10] <- 1
+
+tethar.b85.m <- (tethar.b85*10) - unsuit
+tethar.b85.m[tethar.b85.m < 10] <- 0
+tethar.b85.m[tethar.b85.m == 10] <- 1
+
+par(mfrow=c(1,3))
+plot(tethar.b.m)
+plot(tethar.b45.m)
+plot(tethar.b85.m)
+
+writeRaster(tethar.b.m, filename = "T_harmandii_ss01/T_harmandii_ss01_currentEnv_bin_ave_masked.tif", datatype='INT2S')
+writeRaster(tethar.b45.m, filename = "T_harmandii_ss01/T_harmandii_ss01_2070_RCP45_ensem_bin_masked.tif", datatype='INT2S')
+writeRaster(tethar.b85.m, filename = "T_harmandii_ss01/T_harmandii_ss01_2070_RCP85_ensem_bin_masked.tif", datatype='INT2S')
 
 ### TETRASTIGMA COMBINATIONS ####
 
-tet1 <- tetloh.b + tetspa.b + tetell.b
-tet2 <- tetmag.b + tethar.b
+#current
+tet1 <- tetloh.b.m + tetspa.b.m + tetell.b.m
+tet2 <- tetmag.b.m + tethar.b.m
 
-par(mfrow=c(1,2))
+#RCP 4.5
+tet1.45 <- tetloh.b45.m + tetspa.b45.m + tetell.b45.m
+tet2.45 <- tetmag.b45.m + tethar.b45.m
+
+#RCP 8.5
+tet1.85 <- tetloh.b85.m + tetspa.b85.m + tetell.b85.m
+tet2.85 <- tetmag.b85.m + tethar.b85.m
+
+#plot to check
+#set A
+par(mfrow=c(1,3))
 plot(tet1, main = "T.loheri + T.sp.A + T.ellipticum")
-plot(tet2, main = "T.magnum + T.harmandii")
+plot(tet1.45, main = "RCP 4.5")
+plot(tet1.85, main = "RCP 8.5")
 
-writeRaster(tet1, filename = "Tetrastigma_SetA_LAE.tif", datatype='INT2S')
-writeRaster(tet2, filename = "Tetrastigma_SetB_MH.tif", datatype='INT2S')
+#Set B
+par(mfrow=c(1,3))
+plot(tet2, main = "T.magnum + T.harmandii")
+plot(tet2.45, main = "RCP 4.5")
+plot(tet2.85, main = "RCP 8.5")
+
+#write to file
+#current
+writeRaster(tet1, filename = "Tetrastigma_SetA_LAE_current_masked.tif", datatype='INT2S')
+writeRaster(tet2, filename = "Tetrastigma_SetB_MH_current_masked.tif", datatype='INT2S')
+
+#RCP45
+writeRaster(tet1.45, filename = "Tetrastigma_SetA_LAE_RCP45_masked.tif", datatype='INT2S')
+writeRaster(tet2.45, filename = "Tetrastigma_SetB_MH_RCP45_masked.tif", datatype='INT2S')
+
+#RCP8.5
+writeRaster(tet1.85, filename = "Tetrastigma_SetA_LAE_RCP85_masked.tif", datatype='INT2S')
+writeRaster(tet2.85, filename = "Tetrastigma_SetB_MH_RCP85_masked.tif", datatype='INT2S')
 
 
 #### COMPARISON OF APPROACHES: USING CONTINUOUS MAXENT RESULTS, UNMASKED ####
