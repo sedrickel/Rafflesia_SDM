@@ -27,7 +27,8 @@ generate_label_df <- function(TUKEY, variable){
 
 ### Input data ####
 
-alldata <- read_excel("All_Rafflesia_spp_suitable_masked_envdata.xlsx")
+alldata <- read_excel("All_Rafflesia_spp_suitable_masked_envdata.xlsx") #entire PH
+alldata <- read.csv("D:/PROJECTS/Rafflesia_SDM/Island_analysis/All_Rafflesia_spp_a1_suitable_masked_native_ranges_envdata.csv") #native habitats only
 summary(alldata)
 
 alldata$Species <- as.factor(alldata$Species)
@@ -41,6 +42,7 @@ alllob <- filter(alldata, Species == "Rlob") #lobata
 summary(allspe)
 summary(alllag)
 summary(alllob)
+
 
 #### LINEAR MODELS ####
 
@@ -96,8 +98,6 @@ visreg(a4)
 #Lobata
 
 #check and transform distribution of altitude data
-
-
 hist(alllob$altitude)
 hist(sqrt(alllob$altitude))
 alllob$alt.sqrt <- sqrt(alllob$altitude)
@@ -126,8 +126,6 @@ a9lab <- generate_label_df(a9 , 'Scenario')
 a9lab
 
 visreg(a7)
-
-
 
 
 #### Multiple regression models ####
