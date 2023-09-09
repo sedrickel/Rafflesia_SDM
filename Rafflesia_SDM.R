@@ -1753,7 +1753,7 @@ plot(rlob2.45.m, main = paste0(sp.name," RCP4.5-A2"))
 plot(rlob2.85.m, main = paste0(sp.name," RCP8.5-A2"))
 
 ### EXTRACTING CLIMATE DATA ####
-setwd("Envi")
+#### Rafflesia ####
 
 #get PH shapefile
 phl.shp <- getData('GADM', country = 'PHL', level=0)
@@ -1769,6 +1769,7 @@ sppoints <- datapoints[,-1]
 
 envdata <- stack(modelclimEnv, alt.PH)
 names(envdata)[12] <- "altitude"
+
 climate.df <- raster::extract(envdata, sppoints, df = T)
 climate.df <- cbind(datapoints, climate.df)
 climate.df <- climate.df[,-4]
@@ -1908,134 +1909,132 @@ summary(all.alt)
 
 write.csv(all.alt, file = "All_Rafflesia_spp_suitable_masked_envdata.csv", row.names = F)
 
-### PLOTS ####
-#pal <- colorRampPalette(c("grey", "darkgreen", "red"))
-#cuts <- c(0,1,2,3)
+#### Tetrastigma ####
 
-# Boxplots of Envi data across RCP scenarios
-# but this is not correct as of 11/18/2022 for bioclim data, because the future suitable areas were extracted using current climate data
+#read in Tetrastigma results 
 
-#altitude
-altboxgg <- ggplot() + 
-  geom_boxplot(aes(y = altitude, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Altitude (masl)")
-ggsave(altboxgg, file="Plots/Boxplot-alt-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# T. loheri
+tloh.cur <- raster("T_loheri_01/T_loheri_01_currentEnv_bin_ave_masked.tif")
 
-tempboxgg <- ggplot() + 
-  geom_boxplot(aes(y = bio1/10, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Mean Annual Temp (°C)")
-ggsave(tempboxgg, file="Plots/Boxplot-matemp-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# T. sp A
+tspa.cur <- raster("T_spa_01ss/T_spa_01ss_currentEnv_bin_ave_masked.tif")
 
-precboxgg <- ggplot() + 
-  geom_boxplot(aes(y = bio12, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Mean Annual Precipitation (mm/yr)")
-ggsave(precboxgg, file="Plots/Boxplot-prec-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# T. ellipticum
+tell.cur <- raster("T_ellipticum_01/T_ellipticum_01_currentEnv_bin_ave_masked.tif")
 
+# T. magnum
+tmag.cur <- raster("T_magnum_01/T_magnum_01_currentEnv_bin_ave_masked.tif")
 
-tempseaboxgg <- ggplot() + 
-  geom_boxplot(aes(y = bio4, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Temperature Seasonality (sd)")
-ggsave(tempseaboxgg, file="Plots/Boxplot-tempsea-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# T. harmandii
+thar.cur <- raster("T_harmandii_ss01/T_harmandii_ss01_currentEnv_bin_ave_masked.tif")
 
-precseaboxgg <- ggplot() + 
-  geom_boxplot(aes(y = bio15, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Precipitation Seasonality (cv)")
-ggsave(precseaboxgg, file="Plots/Boxplot-precsea-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# Set A
+tsetA.cur <-raster("Tetrastigma_SetA_LAE_current_masked.tif")
+plot(tsetA.cur) 
+tsetA.cur[tsetA.cur > 0] <- 1
 
-precoldboxgg <- ggplot() + 
-  geom_boxplot(aes(y = bio19, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Precipitation of Coldest Quarter (mm/quarter)")
-ggsave(precoldboxgg, file="Plots/Boxplot-precoldq-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# Set B
+tsetB.cur <-raster("Tetrastigma_SetB_MH_current_masked.tif")
+plot(tsetB.cur) 
+tsetB.cur[tsetB.cur > 0] <- 1
 
-#soils
-bdboxgg <- ggplot() + 
-  geom_boxplot(aes(y = bulk_density, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Soil Bulk Density (kg/m^3)")
-ggsave(bdboxgg, file="Plots/Boxplot-bulkdens-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# Convert to data frames for extraction of envi variables
 
-cecboxgg <- ggplot() + 
-  geom_boxplot(aes(y = cec, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Soil Cation Exchange Capacity (cmolc/kg)")
-ggsave(cecboxgg, file="Plots/Boxplot-cec-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# T loheri
+tloh <- as.data.frame(tloh.cur, na.rm = T, xy=T)
+colnames(tloh) <- c("lon", "lat", "bin")
+head(tloh)
+tloh <- filter(tloh, bin==1)
+tloh <- tloh[,1:2]
 
-soilphgg <- ggplot() + 
-  geom_boxplot(aes(y = soilph/10, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Soil pH")
-ggsave(soilphgg, file="Plots/Boxplot-soilph-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+tloh.df <- raster::extract(envdata, tloh, method = "simple", na.rm = T)
+tloh.df <- as.data.frame(tloh.df)
+tloh.df$Scenario <- rep("Current", dim(tloh.df)[1])
+tloh.df$Species <- rep("Tloh", dim(tloh.df)[1])
 
-claygg <- ggplot() + 
-  geom_boxplot(aes(y = clay, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Soil Clay Content (%)")
-ggsave(claygg, file="Plots/Boxplot-clay-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# T sp A
+tspa <- as.data.frame(tspa.cur, na.rm = T, xy=T)
+colnames(tspa) <- c("lon", "lat", "bin")
+head(tspa)
+tspa <- filter(tspa, bin==1)
+tspa <- tspa[,1:2]
 
-sandgg <- ggplot() + 
-  geom_boxplot(aes(y = sand, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Soil Sand Content (%)")
-ggsave(sandgg, file="Plots/Boxplot-sand-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+tspa.df <- raster::extract(envdata, tspa, method = "simple", na.rm = T)
+tspa.df <- as.data.frame(tspa.df)
+tspa.df$Scenario <- rep("Current", dim(tspa.df)[1])
+tspa.df$Species <- rep("Tspa", dim(tspa.df)[1])
 
-siltgg <- ggplot() + 
-  geom_boxplot(aes(y = silt, x = Species, fill=Scenario), 
-               data=all.alt , outlier.shape = 1, outlier.size = 1) +
-  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
-  theme_ipsum() +
-  ylab("Soil Silt Content (%)")
-ggsave(siltgg, file="Plots/Boxplot-silt-Rafflesia_spp_masked.png", width=19.89, height=15, units="cm", dpi=300)
+# T ellipticum
+tell <- as.data.frame(tell.cur, na.rm = T, xy=T)
+colnames(tell) <- c("lon", "lat", "bin")
+head(tell)
+tell <- filter(tell, bin==1)
+tell <- tell[,1:2]
+
+tell.df <- raster::extract(envdata, tell, method = "simple", na.rm = T)
+tell.df <- as.data.frame(tell.df)
+tell.df$Scenario <- rep("Current", dim(tell.df)[1])
+tell.df$Species <- rep("Tell", dim(tell.df)[1])
+
+# T harmandii
+thar <- as.data.frame(thar.cur, na.rm = T, xy=T)
+colnames(thar) <- c("lon", "lat", "bin")
+head(thar)
+thar <- filter(thar, bin==1)
+thar <- thar[,1:2]
+
+thar.df <- raster::extract(envdata, thar, method = "simple", na.rm = T)
+thar.df <- as.data.frame(thar.df)
+thar.df$Scenario <- rep("Current", dim(thar.df)[1])
+thar.df$Species <- rep("Thar", dim(thar.df)[1])
 
 
+# T magnum
+tmag <- as.data.frame(tmag.cur, na.rm = T, xy=T)
+colnames(tmag) <- c("lon", "lat", "bin")
+head(tmag)
+tmag <- filter(tmag, bin==1)
+tmag <- tmag[,1:2]
 
+tmag.df <- raster::extract(envdata, tmag, method = "simple", na.rm = T)
+tmag.df <- as.data.frame(tmag.df)
+tmag.df$Scenario <- rep("Current", dim(tmag.df)[1])
+tmag.df$Species <- rep("Tmag", dim(tmag.df)[1])
 
-#R. speciosa
+# Set A
+tsetA <- as.data.frame(tsetA.cur, na.rm = T, xy=T)
+colnames(tsetA) <- c("lon", "lat", "bin")
+head(tsetA)
+tsetA <- filter(tsetA, bin==1)
+tsetA <- tsetA[,1:2]
 
-windows()
-par(mfrow = c(1,3))
-plot(rs1)
-plot(rs2)
-plot(rs3)
+tsetA.df <- raster::extract(envdata, tsetA, method = "simple", na.rm = T)
+tsetA.df <- as.data.frame(tsetA.df)
+tsetA.df$Scenario <- rep("Current", dim(tsetA.df)[1])
+tsetA.df$Species <- rep("TsetA", dim(tsetA.df)[1])
 
-#R. lagascae
-par(mfrow = c(1,3))
-plot(rlag1)
-plot(rlag2)
-plot(rlag3)
+# Set B
+tsetB <- as.data.frame(tsetB.cur, na.rm = T, xy=T)
+colnames(tsetB) <- c("lon", "lat", "bin")
+head(tsetB)
+tsetB <- filter(tsetB, bin==1)
+tsetB <- tsetB[,1:2]
 
-#R. lobata
-par(mfrow = c(1,3))
-plot(rlob1)
-plot(rlob2)
-plot(rlob3)
+tsetB.df <- raster::extract(envdata, tsetB, method = "simple", na.rm = T)
+tsetB.df <- as.data.frame(tsetB.df)
+tsetB.df$Scenario <- rep("Current", dim(tsetB.df)[1])
+tsetB.df$Species <- rep("TsetB", dim(tsetB.df)[1])
+
+# combine all
+all.tetra <- rbind(tloh.df, tspa.df, tell.df, tmag.df, thar.df, tsetA.df, tsetB.df)
+all.tetra $Species <- as.factor(all.tetra $Species)
+all.tetra $Scenario <- as.factor(all.tetra $Scenario)
+
+all.tetra <- na.omit(all.tetra)
+summary(all.tetra)
+
+write.csv(all.tetra, file = "All_Tetrastigma_spp_suitable_masked_envdata.csv", row.names = F)
+
 
 
 ### END OF CODE ####
