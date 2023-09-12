@@ -31,11 +31,11 @@ envintv$Scenario <- as.factor(envintv$Scenario)
 rspe.pts <- filter(envipts, Species == "Rafflesia speciosa")
 rspe.pts$Coverage <- rep("Species points", dim(rspe.pts)[1])
 
-rspe.ph <- filter(envisdm, (Species == "Rspe" & Scenario == "Current")) #entire PH
+rspe.ph <- filter(envisdm, Species == "Rspe") #entire PH
 rspe.ph$Species <- rep("Rafflesia speciosa", dim(rspe.ph)[1])
 rspe.ph$Coverage <- rep("Philippine extent SDM", dim(rspe.ph)[1])
 
-rspe.nt <- filter(envintv, (Species == "Rspe" & Scenario == "Current")) #native range only
+rspe.nt <- filter(envintv, Species == "Rspe" ) #native range only
 rspe.nt$Species <- rep("Rafflesia speciosa", dim(rspe.nt)[1])
 rspe.nt$Coverage <- rep("Native range SDM", dim(rspe.nt)[1])
 
@@ -44,11 +44,11 @@ rspe.nt$Coverage <- rep("Native range SDM", dim(rspe.nt)[1])
 rlob.pts <- filter(envipts, Species == "Rafflesia lobata")
 rlob.pts$Coverage <- rep("Species points", dim(rlob.pts)[1])
 
-rlob.ph <- filter(envisdm, (Species == "Rlob" & Scenario == "Current")) #entire PH
+rlob.ph <- filter(envisdm, Species == "Rlob") #entire PH
 rlob.ph$Species <- rep("Rafflesia lobata", dim(rlob.ph)[1])
 rlob.ph$Coverage <- rep("Philippine extent SDM", dim(rlob.ph)[1])
 
-rlob.nt <- filter(envintv, (Species == "Rlob" & Scenario == "Current")) #native range only
+rlob.nt <- filter(envintv, Species == "Rlob") #native range only
 rlob.nt$Species <- rep("Rafflesia lobata", dim(rlob.nt)[1])
 rlob.nt$Coverage <- rep("Native range SDM", dim(rlob.nt)[1])
 
@@ -57,11 +57,11 @@ rlob.nt$Coverage <- rep("Native range SDM", dim(rlob.nt)[1])
 rlag.pts <- filter(envipts, Species == "Rafflesia lagascae")
 rlag.pts$Coverage <- rep("Species points", dim(rlag.pts)[1])
 
-rlag.ph <- filter(envisdm, (Species == "Rlag" & Scenario == "Current")) #entire PH
+rlag.ph <- filter(envisdm, Species == "Rlag") #entire PH
 rlag.ph$Species <- rep("Rafflesia lagascae", dim(rlag.ph)[1])
 rlag.ph$Coverage <- rep("Philippine extent SDM", dim(rlag.ph)[1])
 
-rlag.nt <- filter(envintv, (Species == "Rlag" & Scenario == "Current")) #native range only
+rlag.nt <- filter(envintv, Species == "Rlag") #native range only
 rlag.nt$Species <- rep("Rafflesia lagascae", dim(rlag.nt)[1])
 rlag.nt$Coverage <- rep("Native range SDM", dim(rlag.nt)[1])
 
@@ -168,79 +168,80 @@ rlag.ps <- bind_rows( df2, df3)
 ps.all <- bind_rows(rspe.ps, rlob.ps, rlag.ps)
 ps.all$Coverage <- factor(ps.all$Coverage, levels = c("Native range SDM", "Philippine extent SDM"), ordered = T)
 
-# soils
+# soils, adding climate scenarios here for the revision (9/11/2023)
 
 #soil ph
 #df1 <- dplyr::select(rspe.pts, Species, Coverage, soilph)
-df2 <- dplyr::select(rspe.ph, Species, Coverage, soilph)
-df3 <- dplyr::select(rspe.nt, Species, Coverage, soilph)
+df2 <- dplyr::select(rspe.ph, Species, Coverage, Scenario, soilph)
+df3 <- dplyr::select(rspe.nt, Species, Coverage, Scenario, soilph)
 rspe.sph <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlob.pts, Species, Coverage, soilph)
-df2 <- dplyr::select(rlob.ph, Species, Coverage, soilph)
-df3 <- dplyr::select(rlob.nt, Species, Coverage, soilph)
+df2 <- dplyr::select(rlob.ph, Species, Coverage, Scenario, soilph)
+df3 <- dplyr::select(rlob.nt, Species, Coverage, Scenario, soilph)
 rlob.sph <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlag.pts, Species, Coverage, soilph)
-df2 <- dplyr::select(rlag.ph, Species, Coverage, soilph)
-df3 <- dplyr::select(rlag.nt, Species, Coverage, soilph)
+df2 <- dplyr::select(rlag.ph, Species, Coverage, Scenario, soilph)
+df3 <- dplyr::select(rlag.nt, Species, Coverage, Scenario, soilph)
 rlag.sph <- bind_rows( df2, df3)
 
 sph.all <- bind_rows(rspe.sph, rlob.sph, rlag.sph)
 sph.all$Coverage <- factor(sph.all$Coverage, levels = c("Native range SDM", "Philippine extent SDM"), ordered = T)
 
+
 #soil CEC
-df1 <- dplyr::select(rspe.pts, Species, Coverage, cec)
-df2 <- dplyr::select(rspe.ph, Species, Coverage, cec)
-df3 <- dplyr::select(rspe.nt, Species, Coverage, cec)
-rspe.cec <- bind_rows(df1, df2, df3)
+#df1 <- dplyr::select(rspe.pts, Species, Coverage, cec)
+df2 <- dplyr::select(rspe.ph, Species, Coverage, Scenario, cec)
+df3 <- dplyr::select(rspe.nt, Species, Coverage, Scenario, cec)
+rspe.cec <- bind_rows(df2, df3)
 
-df1 <- dplyr::select(rlob.pts, Species, Coverage, cec)
-df2 <- dplyr::select(rlob.ph, Species, Coverage, cec)
-df3 <- dplyr::select(rlob.nt, Species, Coverage, cec)
-rlob.cec <- bind_rows(df1, df2, df3)
+#df1 <- dplyr::select(rlob.pts, Species, Coverage, cec)
+df2 <- dplyr::select(rlob.ph, Species, Coverage, Scenario, cec)
+df3 <- dplyr::select(rlob.nt, Species, Coverage, Scenario, cec)
+rlob.cec <- bind_rows(df2, df3)
 
-df1 <- dplyr::select(rlag.pts, Species, Coverage, cec)
-df2 <- dplyr::select(rlag.ph, Species, Coverage, cec)
-df3 <- dplyr::select(rlag.nt, Species, Coverage, cec)
-rlag.cec <- bind_rows(df1, df2, df3)
+#df1 <- dplyr::select(rlag.pts, Species, Coverage, cec)
+df2 <- dplyr::select(rlag.ph, Species, Coverage, Scenario, cec)
+df3 <- dplyr::select(rlag.nt, Species, Coverage, Scenario, cec)
+rlag.cec <- bind_rows(df2, df3)
 
 cec.all <- bind_rows(rspe.cec, rlob.cec, rlag.cec)
-cec.all$Coverage <- factor(cec.all$Coverage, levels = c("Species points", "Native range SDM", "Philippine extent SDM"), ordered = T)
+cec.all$Coverage <- factor(cec.all$Coverage, levels = c("Native range SDM", "Philippine extent SDM"), ordered = T)
 
 #soil bulk density
-df1 <- dplyr::select(rspe.pts, Species, Coverage, bulk_density)
-df2 <- dplyr::select(rspe.ph, Species, Coverage, bulk_density)
-df3 <- dplyr::select(rspe.nt, Species, Coverage, bulk_density)
-rspe.bd <- bind_rows(df1, df2, df3)
+#df1 <- dplyr::select(rspe.pts, Species, Coverage, bulk_density)
+df2 <- dplyr::select(rspe.ph, Species, Coverage, Scenario, bulk_density)
+df3 <- dplyr::select(rspe.nt, Species, Coverage, Scenario, bulk_density)
+rspe.bd <- bind_rows( df2, df3)
 
-df1 <- dplyr::select(rlob.pts, Species, Coverage, bulk_density)
-df2 <- dplyr::select(rlob.ph, Species, Coverage, bulk_density)
-df3 <- dplyr::select(rlob.nt, Species, Coverage, bulk_density)
-rlob.bd <- bind_rows(df1, df2, df3)
+#df1 <- dplyr::select(rlob.pts, Species, Coverage, bulk_density)
+df2 <- dplyr::select(rlob.ph, Species, Coverage, Scenario, bulk_density)
+df3 <- dplyr::select(rlob.nt, Species, Coverage, Scenario, bulk_density)
+rlob.bd <- bind_rows(df2, df3)
 
-df1 <- dplyr::select(rlag.pts, Species, Coverage, bulk_density)
-df2 <- dplyr::select(rlag.ph, Species, Coverage, bulk_density)
-df3 <- dplyr::select(rlag.nt, Species, Coverage, bulk_density)
-rlag.bd <- bind_rows(df1, df2, df3)
+#df1 <- dplyr::select(rlag.pts, Species, Coverage, bulk_density)
+df2 <- dplyr::select(rlag.ph, Species, Coverage, Scenario, bulk_density)
+df3 <- dplyr::select(rlag.nt, Species, Coverage, Scenario, bulk_density)
+rlag.bd <- bind_rows(df2, df3)
 
 bd.all <- bind_rows(rspe.bd, rlob.bd, rlag.bd)
-bd.all$Coverage <- factor(bd.all$Coverage, levels = c("Species points", "Native range SDM", "Philippine extent SDM"), ordered = T)
+bd.all$Coverage <- factor(bd.all$Coverage, levels = c("Native range SDM", "Philippine extent SDM"), ordered = T)
 
 #soil sand
 #df1 <- dplyr::select(rspe.pts, Species, Coverage, sand)
-df2 <- dplyr::select(rspe.ph, Species, Coverage, sand)
-df3 <- dplyr::select(rspe.nt, Species, Coverage, sand)
+df2 <- dplyr::select(rspe.ph, Species, Coverage, Scenario, sand)
+df3 <- dplyr::select(rspe.nt, Species, Coverage, Scenario, sand)
 rspe.sand <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlob.pts, Species, Coverage, sand)
-df2 <- dplyr::select(rlob.ph, Species, Coverage, sand)
-df3 <- dplyr::select(rlob.nt, Species, Coverage, sand)
+df2 <- dplyr::select(rlob.ph, Species, Coverage, Scenario, sand)
+df3 <- dplyr::select(rlob.nt, Species, Coverage, Scenario, sand)
 rlob.sand <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlag.pts, Species, Coverage, sand)
-df2 <- dplyr::select(rlag.ph, Species, Coverage, sand)
-df3 <- dplyr::select(rlag.nt, Species, Coverage, sand)
+df2 <- dplyr::select(rlag.ph, Species, Coverage, Scenario, sand)
+df3 <- dplyr::select(rlag.nt, Species, Coverage, Scenario, sand)
 rlag.sand <- bind_rows( df2, df3)
 
 sand.all <- bind_rows(rspe.sand, rlob.sand, rlag.sand)
@@ -248,18 +249,18 @@ sand.all$Coverage <- factor(sand.all$Coverage, levels = c("Native range SDM", "P
 
 #soil silt
 #df1 <- dplyr::select(rspe.pts, Species, Coverage, silt)
-df2 <- dplyr::select(rspe.ph, Species, Coverage, silt)
-df3 <- dplyr::select(rspe.nt, Species, Coverage, silt)
+df2 <- dplyr::select(rspe.ph, Species, Coverage, Scenario, silt)
+df3 <- dplyr::select(rspe.nt, Species, Coverage, Scenario, silt)
 rspe.silt <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlob.pts, Species, Coverage, silt)
-df2 <- dplyr::select(rlob.ph, Species, Coverage, silt)
-df3 <- dplyr::select(rlob.nt, Species, Coverage, silt)
+df2 <- dplyr::select(rlob.ph, Species, Coverage, Scenario, silt)
+df3 <- dplyr::select(rlob.nt, Species, Coverage, Scenario, silt)
 rlob.silt <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlag.pts, Species, Coverage, silt)
-df2 <- dplyr::select(rlag.ph, Species, Coverage, silt)
-df3 <- dplyr::select(rlag.nt, Species, Coverage, silt)
+df2 <- dplyr::select(rlag.ph, Species, Coverage, Scenario, silt)
+df3 <- dplyr::select(rlag.nt, Species, Coverage, Scenario, silt)
 rlag.silt <- bind_rows( df2, df3)
 
 silt.all <- bind_rows(rspe.silt, rlob.silt, rlag.silt)
@@ -267,18 +268,18 @@ silt.all$Coverage <- factor(silt.all$Coverage, levels = c( "Native range SDM", "
 
 #soil clay
 #df1 <- dplyr::select(rspe.pts, Species, Coverage, clay)
-df2 <- dplyr::select(rspe.ph, Species, Coverage, clay)
-df3 <- dplyr::select(rspe.nt, Species, Coverage, clay)
+df2 <- dplyr::select(rspe.ph, Species, Coverage, Scenario, clay)
+df3 <- dplyr::select(rspe.nt, Species, Coverage, Scenario, clay)
 rspe.clay <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlob.pts, Species, Coverage, clay)
-df2 <- dplyr::select(rlob.ph, Species, Coverage, clay)
-df3 <- dplyr::select(rlob.nt, Species, Coverage, clay)
+df2 <- dplyr::select(rlob.ph, Species, Coverage, Scenario, clay)
+df3 <- dplyr::select(rlob.nt, Species, Coverage, Scenario, clay)
 rlob.clay <- bind_rows( df2, df3)
 
 #df1 <- dplyr::select(rlag.pts, Species, Coverage, clay)
-df2 <- dplyr::select(rlag.ph, Species, Coverage, clay)
-df3 <- dplyr::select(rlag.nt, Species, Coverage, clay)
+df2 <- dplyr::select(rlag.ph, Species, Coverage, Scenario, clay)
+df3 <- dplyr::select(rlag.nt, Species, Coverage, Scenario, clay)
 rlag.clay <- bind_rows( df2, df3)
 
 clay.all <- bind_rows(rspe.clay, rlob.clay, rlag.clay)
@@ -411,3 +412,253 @@ grid.arrange(siltboxgg, clayboxgg, ncol=2, nrow=1)
 mylegend <- cowplot::get_legend(altboxgg)
 grid.newpage()
 grid.draw(mylegend)
+
+
+
+#### BOXPLOTS FOR REVISION ####
+### 9 Sep 2023 ###
+
+# Check if soil conditions are changing under different climate scenarios #
+# Only plotting soils since climate is the changing factor #
+
+# Define the color gradient for species and climate scenarios
+species_colors <- c("#d9d9d9", "#bdbdbd", "#4d4d4d") # Add more colors if needed
+scenario_colors <- c("#f7f7f7",  "#f1b6da", "#d01c8b")
+
+# create ggplots
+# soil pH
+
+# Split the Coverage column into Native island and entire PH
+sph.all.nt <- filter(sph.all, Coverage=="Native range SDM")
+sph.all.ph <- filter(sph.all, Coverage=="Philippine extent SDM")
+
+# Generate the plots
+phboxgg1 <- ggplot(data = sph.all.nt, aes(y = soilph/10, x = Species, fill = Scenario)) +
+    geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+    scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+    theme_minimal() +
+    theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+    ylab("soil pH") +
+    facet_wrap(~ Species, scales = "free_x")+
+    coord_cartesian(ylim = c(4.2, 6.3))  # Set the desired y-axis limits
+  
+phboxgg2 <- ggplot(data = sph.all.ph, aes(y = soilph/10, x = Species, fill = Scenario)) +
+    geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+    scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+    theme_minimal() +
+    theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+    ylab("soil pH") +
+    facet_wrap(~ Species, scales = "free_x") +
+    coord_cartesian(ylim = c(4.2, 6.3))  # Set the desired y-axis limits
+  
+# Add labels and combine the plots
+combined_plot <- cowplot::plot_grid(phboxgg1 + ggtitle("Native Range"), phboxgg2 + ggtitle("Entire Philippines"), nrow = 1, align = "h", labels = c("A", "B"), hjust = -2, vjust = 1.5)
+  
+
+# Save the plot
+ggsave(combined_plot, file = "Plots/Revisions/Boxplot-soilpH-Rafflesia_spp_masked_all_climates.png",
+       width = 45, height = 15, units = "cm", dpi = 300)
+
+
+# soil CEC
+# Split the Coverage column into Native island and entire PH
+cec.all.nt <- filter(cec.all, Coverage=="Native range SDM")
+cec.all.ph <- filter(cec.all, Coverage=="Philippine extent SDM")
+
+# Generate the plots
+cecboxgg1 <- ggplot(data = cec.all.nt, aes(y = cec, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+ theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil CEC (cmol/kg)") +
+  facet_wrap(~ Species, scales = "free_x") +
+  coord_cartesian(ylim = c(5, 55))  # Set the desired y-axis limits
+
+cecboxgg2 <- ggplot(data = cec.all.ph, aes(y = cec, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil CEC (cmol/kg)") +
+  facet_wrap(~ Species, scales = "free_x") +
+  coord_cartesian(ylim = c(5, 55))  # Set the desired y-axis limits
+
+
+# Add labels and combine the plots
+combined_plot <- cowplot::plot_grid(cecboxgg1 + ggtitle("Native Range"), cecboxgg2 + ggtitle("Entire Philippines"), nrow = 1, align = "h", labels = c("A", "B"), hjust = -2, vjust = 1.5)
+
+
+# Save the plot
+ggsave(combined_plot, file = "Plots/Revisions/Boxplot-soilCEC-Rafflesia_spp_masked_all_climates.png",
+       width = 45, height = 15, units = "cm", dpi = 300)
+
+
+# Bulk Density #
+# Split the Coverage column into Native island and entire PH
+bd.all.nt <- filter(bd.all, Coverage=="Native range SDM")
+bd.all.ph <- filter(bd.all, Coverage=="Philippine extent SDM")
+
+# Generate the plots
+bdboxgg1 <- ggplot(data = bd.all.nt, aes(y = bulk_density, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil bulk density (kg/cubic-m)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(550, 1400))  # Set the desired y-axis limits
+
+bdboxgg2 <- ggplot(data = bd.all.ph, aes(y = bulk_density, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil bulk density (kg/cubic-m)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(550, 1400))  # Set the desired y-axis limits
+
+
+# Add labels and combine the plots
+combined_plot <- cowplot::plot_grid(bdboxgg1 + ggtitle("Native Range"), bdboxgg2 + ggtitle("Entire Philippines"), nrow = 1, align = "h", labels = c("A", "B"), hjust = -2, vjust = 1.5)
+
+# Save the plot
+ggsave(combined_plot, file = "Plots/Revisions/Boxplot-soilbulkdens-Rafflesia_spp_masked_all_climates.png",
+       width = 45, height = 15, units = "cm", dpi = 300)
+
+
+#Sand 
+# Split the Coverage column into Native island and entire PH
+sand.all.nt <- filter(sand.all, Coverage=="Native range SDM")
+sand.all.ph <- filter(sand.all, Coverage=="Philippine extent SDM")
+
+# Generate the plots
+sandboxgg1 <- ggplot(data = sand.all.nt, aes(y = sand, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil sand content (%)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(20, 65))  # Set the desired y-axis limits
+
+sandboxgg2 <- ggplot(data = sand.all.ph, aes(y = sand, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil sand content (%)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(20, 65))  # Set the desired y-axis limits
+
+
+# Add labels and combine the plots
+combined_plot <- cowplot::plot_grid(sandboxgg1 + ggtitle("Native Range"), sandboxgg2 + ggtitle("Entire Philippines"), nrow = 1, align = "h", labels = c("A", "B"), hjust = -2, vjust = 1.5)
+
+# Save the plot
+ggsave(combined_plot, file = "Plots/Revisions/Boxplot-soilsand-Rafflesia_spp_masked_all_climates.png",
+       width = 45, height = 15, units = "cm", dpi = 300)
+
+
+#Silt 
+# Split the Coverage column into Native island and entire PH
+silt.all.nt <- filter(silt.all, Coverage=="Native range SDM")
+silt.all.ph <- filter(silt.all, Coverage=="Philippine extent SDM")
+
+# Generate the plots
+siltboxgg1 <- ggplot(data = silt.all.nt, aes(y = silt, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil silt content (%)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(15, 50))  # Set the desired y-axis limits
+
+siltboxgg2 <- ggplot(data = silt.all.ph, aes(y = silt, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil silt content (%)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(15, 50))  # Set the desired y-axis limits
+
+
+# Add labels and combine the plots
+combined_plot <- cowplot::plot_grid(siltboxgg1 + ggtitle("Native Range"), siltboxgg2 + ggtitle("Entire Philippines"), nrow = 1, align = "h", labels = c("A", "B"), hjust = -2, vjust = 1.5)
+
+# Save the plot
+ggsave(combined_plot, file = "Plots/Revisions/Boxplot-soilsilt-Rafflesia_spp_masked_all_climates.png",
+       width = 45, height = 15, units = "cm", dpi = 300)
+
+# Clay 
+# Split the Coverage column into Native island and entire PH
+clay.all.nt <- filter(clay.all, Coverage=="Native range SDM")
+clay.all.ph <- filter(clay.all, Coverage=="Philippine extent SDM")
+
+# Generate the plots
+clayboxgg1 <- ggplot(data = clay.all.nt, aes(y = clay, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil clay content (%)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(10, 50))  # Set the desired y-axis limits
+
+clayboxgg2 <- ggplot(data = clay.all.ph, aes(y = clay, x = Species, fill = Scenario)) +
+  geom_boxplot(show.legend = T, outlier.shape = 1, outlier.size = 1) +
+  scale_fill_viridis(discrete=T, option = "E", name="", direction = -1) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12, face = "italic"), # Add italic font to x-axis labels
+        axis.title = element_text(size = 14, face = "bold"),
+        strip.text = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
+  ylab("soil clay content (%)") +
+  facet_wrap(~ Species, scales = "free_x")+
+  coord_cartesian(ylim = c(10, 50))  # Set the desired y-axis limits
+
+
+# Add labels and combine the plots
+combined_plot <- cowplot::plot_grid(clayboxgg1 + ggtitle("Native Range"), clayboxgg2 + ggtitle("Entire Philippines"), nrow = 1, align = "h", labels = c("A", "B"), hjust = -2, vjust = 1.5)
+
+# Save the plot
+ggsave(combined_plot, file = "Plots/Revisions/Boxplot-soilclay-Rafflesia_spp_masked_all_climates.png",
+       width = 45, height = 15, units = "cm", dpi = 300)
+
+
+
